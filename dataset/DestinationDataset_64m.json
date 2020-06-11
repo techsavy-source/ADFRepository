@@ -1,0 +1,22 @@
+{
+	"name": "DestinationDataset_64m",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1G2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "copyfromblob"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

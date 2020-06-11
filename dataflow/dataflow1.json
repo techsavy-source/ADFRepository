@@ -1,0 +1,32 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "GetMetadataDelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SinkDelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedColumn1"
+				}
+			],
+			"script": "source(output(\n\t\tReportDt as date 'MM/dd/yyyy',\n\t\tUnit as string,\n\t\tPower as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn: 'Source') ~> source1\nsource1 derive(Month = month(ReportDt),\n\t\tYear = year(ReportDt),\n\t\tSource = right(left(Source, 23),6)) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tfilePattern:'File[n].csv',\n\ttruncate: true,\n\tmapColumn(\n\t\tReportDt,\n\t\tUnit,\n\t\tPower,\n\t\tSource,\n\t\tMonth,\n\t\tYear\n\t),\n\tpartitionBy('key',\n\t\t0,\n\t\tYear,\n\t\tMonth\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
